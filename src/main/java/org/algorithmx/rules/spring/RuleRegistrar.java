@@ -1,3 +1,20 @@
+/**
+ * This software is licensed under the Apache 2 license, quoted below.
+ *
+ * Copyright (c) 2019, algorithmx.org (dev@algorithmx.org)
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.algorithmx.rules.spring;
 
 import org.algorithmx.rules.core.Rule;
@@ -17,6 +34,12 @@ import org.springframework.util.MultiValueMap;
 
 import java.util.Arrays;
 
+/**
+ * Spring Registrar responsible for scanning and registering all the Rules(@Rule) in the given base packages.
+ *
+ * @author Max Arulananthan
+ * @since 1.0
+ */
 public class RuleRegistrar implements ImportBeanDefinitionRegistrar, BeanClassLoaderAware {
 
     private final IndependentCandidateClassPathScanner scanner = new IndependentCandidateClassPathScanner(false);
@@ -43,6 +66,12 @@ public class RuleRegistrar implements ImportBeanDefinitionRegistrar, BeanClassLo
         Arrays.stream(basePackages).forEach((basePackage) -> scanPackage(basePackage, registry));
     }
 
+    /**
+     * Retrieves all the base packages from the EnableRules annotation.
+     *
+     * @param metadata scanned data.
+     * @return all the applicable base packages.
+     */
     private String[] getBasePackages(AnnotationMetadata metadata) {
         MultiValueMap<String, Object> attributes = metadata.getAllAnnotationAttributes(EnableRules.class.getName());
 
@@ -57,10 +86,14 @@ public class RuleRegistrar implements ImportBeanDefinitionRegistrar, BeanClassLo
         return result;
     }
 
+    /**
+     * Scans for classes annotated with @Rule and registers them as a Bean.
+     *
+     * @param basePackage base package to scan.
+     * @param registry bean registry.
+     */
     private void scanPackage(String basePackage, BeanDefinitionRegistry registry) {
-        System.err.println("XXX Scanning package [" + basePackage + "]");
         for (BeanDefinition beanDefinition : scanner.findCandidateComponents(basePackage)) {
-            System.err.println("XXX Rule Candidate [" + beanDefinition.getBeanClassName() + "]");
             Class<?> ruleClass = loadClass(beanDefinition.getBeanClassName(),  beanClassLoader);
             RuleDefinition definition = RuleDefinition.load(ruleClass);
             GenericBeanDefinition ruleBeanDefinition = new GenericBeanDefinition();
@@ -71,7 +104,6 @@ public class RuleRegistrar implements ImportBeanDefinitionRegistrar, BeanClassLo
             ruleBeanDefinition.setConstructorArgumentValues(args);
             ruleBeanDefinition.setFactoryBeanName(ruleFactoryBeanName);
             ruleBeanDefinition.setFactoryMethodName("rule");
-            System.err.println("XXX Registering Rule [" + ruleClass.getName() + "] as [" + definition.getName() + "]");
             registry.registerBeanDefinition(definition.getName(), ruleBeanDefinition);
         }
     }

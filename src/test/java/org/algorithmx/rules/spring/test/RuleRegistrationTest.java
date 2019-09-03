@@ -22,7 +22,6 @@ public class RuleRegistrationTest {
 
     @Test
     public void test1() {
-        System.err.println("XXX RuleSet A [" + ruleSetA + "]");
         Arrays.stream(ruleSetA.getRules()).forEach(rule -> System.err.println(rule));
     }
 }
