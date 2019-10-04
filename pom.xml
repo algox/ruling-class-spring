@@ -4,7 +4,7 @@
 
     <groupId>org.algorithmx</groupId>
     <artifactId>ruling-class-spring</artifactId>
-    <version>0.8.3</version>
+    <version>0.8.4-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>Ruling Class Spring</name>
@@ -312,7 +312,7 @@
         <url>https://github.com/algorithmx-org/ruling-class-spring</url>
         <connection>scm:git:git://github.com/algorithmx-org/ruling-class-spring.git</connection>
         <developerConnection>scm:git:git://github.com/algorithmx-org/ruling-class-spring.git</developerConnection>
-        <tag>ruling-class-spring-0.8.3</tag>
+        <tag>HEAD</tag>
     </scm>
 
     <distributionManagement>
