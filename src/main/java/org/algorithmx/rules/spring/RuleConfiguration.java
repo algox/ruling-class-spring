@@ -17,6 +17,7 @@
  */
 package org.algorithmx.rules.spring;
 
+import org.algorithmx.rules.bind.ParameterResolver;
 import org.algorithmx.rules.core.*;
 import org.algorithmx.rules.core.impl.DefaultRuleFactory;
 import org.springframework.beans.factory.BeanFactory;

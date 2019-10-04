@@ -4,7 +4,7 @@
 
     <groupId>org.algorithmx</groupId>
     <artifactId>ruling-class-spring</artifactId>
-    <version>0.5.1-SNAPSHOT</version>
+    <version>0.8.3-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>Ruling Class Spring</name>
@@ -33,6 +33,7 @@
     <properties>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
+        <ruling.class.version>0.8.3</ruling.class.version>
         <commons.logging.version>1.1.1</commons.logging.version>
         <junit.version>4.12</junit.version>
         <version.velocity>1.7</version.velocity>
@@ -60,7 +61,6 @@
         <version.maven-jxr-plugin>2.5</version.maven-jxr-plugin>
         <version.maven-gpg-plugin>1.6</version.maven-gpg-plugin>
         <version.maven-deploy-plugin>2.8.2</version.maven-deploy-plugin>
-
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
@@ -83,7 +83,7 @@
         <dependency>
             <groupId>org.algorithmx</groupId>
             <artifactId>ruling-class</artifactId>
-            <version>0.8</version>
+            <version>${ruling.class.version}</version>
         </dependency>
         <dependency>
             <groupId>junit</groupId>

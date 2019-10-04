@@ -18,7 +18,7 @@
 package org.algorithmx.rules.spring;
 
 import org.algorithmx.rules.core.Rule;
-import org.algorithmx.rules.core.UnrulyException;
+import org.algorithmx.rules.error.UnrulyException;
 import org.algorithmx.rules.model.RuleDefinition;
 import org.algorithmx.rules.spring.annotation.EnableRules;
 import org.springframework.beans.factory.BeanClassLoaderAware;
