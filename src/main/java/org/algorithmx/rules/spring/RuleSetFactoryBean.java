@@ -49,7 +49,7 @@ public class RuleSetFactoryBean implements FactoryBean<RuleSet>, NamedBean {
 
     @Autowired
     private RuleFactory ruleFactory;
-    @Autowired
+    @Autowired(required = false)
     private List<Rule> rules;
 
     private RuleSet result;
