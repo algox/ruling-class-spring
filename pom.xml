@@ -80,10 +80,17 @@
             <artifactId>spring-context</artifactId>
             <version>${spring.version}</version>
         </dependency>
-        <dependency>
+        <!--dependency>
             <groupId>org.algorithmx</groupId>
             <artifactId>ruling-class</artifactId>
             <version>${ruling.class.version}</version>
+        </dependency-->
+        <dependency>
+            <groupId>org.algorithmx</groupId>
+            <artifactId>ruling-class</artifactId>
+            <version>0.8.7</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/ruling-class-0.8.7-SNAPSHOT.jar</systemPath>
         </dependency>
         <dependency>
             <groupId>junit</groupId>
@@ -102,9 +109,11 @@
     <build>
         <resources>
             <resource>
+                <directory>src/main/resources</directory>
+            </resource>
+            <resource>
                 <directory>${project.basedir}</directory>
                 <includes>
-                    <include>NOTICE*</include>
                     <include>LICENSE*</include>
                 </includes>
             </resource>
