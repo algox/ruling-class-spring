@@ -19,13 +19,19 @@
 package org.algorithmx.rulii.spring;
 
 import org.algorithmx.rulii.bind.convert.ConverterRegistry;
+import org.algorithmx.rulii.config.RuliiConfiguration;
+import org.algorithmx.rulii.config.RuliiConfigurationBuilder;
+import org.algorithmx.rulii.config.RuliiSystem;
+import org.algorithmx.rulii.script.ScriptLanguageManager;
+import org.algorithmx.rulii.script.ScriptProcessor;
 import org.algorithmx.rulii.spring.convert.ConverterAdapter;
-import org.algorithmx.rulii.spring.script.SpringElScriptEngine;
 import org.algorithmx.rulii.spring.script.SpringElScriptProcessor;
+import org.algorithmx.rulii.text.MessageResolver;
 import org.algorithmx.rulii.util.reflect.ObjectFactory;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 
 /**
  * Main Rulii configuration. Defines the ObjectFactory.
@@ -33,9 +39,10 @@ import org.springframework.context.annotation.Bean;
  * @author Max Arulananthan
  * @since 1.0
  */
-public class RuliiConfiguration {
+@Configuration
+public class RuliiConfigurer {
 
-    public RuliiConfiguration() {
+    public RuliiConfigurer() {
         super();
     }
 
@@ -56,16 +63,6 @@ public class RuliiConfiguration {
         return ObjectFactory.create();
     }
 
-    @Bean(name = BeanNames.SCRIPT_ENGINE_NAME)
-    public SpringElScriptEngine springElScriptEngine() {
-        return new SpringElScriptEngine();
-    }
-
-    @Bean(name = BeanNames.SCRIPT_PROCESSOR_NAME)
-    public SpringElScriptProcessor scriptProcessor(SpringElScriptEngine scriptEngine) {
-        return new SpringElScriptProcessor(scriptEngine);
-    }
-
     @Bean(name = BeanNames.GENERIC_CONVERTER)
     public ConverterAdapter genericSpringConverter() {
         return new ConverterAdapter();
@@ -78,10 +75,31 @@ public class RuliiConfiguration {
         return result;
     }
 
+    @Bean(name = BeanNames.SCRIPT_PROCESSOR_NAME)
+    public ScriptProcessor scriptProcessor(RuliiMetaInfo metaInfo) {
+        ScriptProcessor result = null;
+
+        if (metaInfo.getScriptLanguage() != null) {
+            result = ScriptLanguageManager.getScriptProcessor(metaInfo.getScriptLanguage());
+        }
+
+        return result != null ? result : new SpringElScriptProcessor();
+    }
+
     @Bean
-    public SystemDefaultsInitializer systemDefaultsInitializer(ObjectFactory objectFactory,
-                                                               SpringElScriptProcessor scriptProcessor,
-                                                               ConverterRegistry registry) {
-        return new SystemDefaultsInitializer(objectFactory, scriptProcessor, registry);
+    public RuliiConfiguration ruliiConfiguration(RuliiMetaInfo metaInfo, ObjectFactory objectFactory,
+                                                 ConverterRegistry converterRegistry, ScriptProcessor scriptProcessor) {
+        RuliiConfigurationBuilder builder = RuliiConfigurationBuilder.create();
+        builder.objectFactory(objectFactory);
+        builder.converterRegistry(converterRegistry);
+        builder.messageResolver(MessageResolver.create(metaInfo.getMessageSources()));
+        builder.scriptProcessor(scriptProcessor);
+
+        RuliiConfiguration result = builder.build();
+
+        // Point the RuliiSystem to the new config
+        RuliiSystem.getInstance().setConfiguration(result);
+
+        return result;
     }
 }

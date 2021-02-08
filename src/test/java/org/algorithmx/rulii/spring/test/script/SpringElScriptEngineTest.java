@@ -19,13 +19,12 @@
 package org.algorithmx.rulii.spring.test.script;
 
 import org.algorithmx.rulii.bind.Bindings;
+import org.algorithmx.rulii.script.ScriptLanguageManager;
 import org.algorithmx.rulii.script.ScriptProcessor;
 import org.algorithmx.rulii.spring.script.SpringElScriptProcessor;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
-
-import javax.script.ScriptEngine;
-import javax.script.ScriptEngineManager;
 
 public class SpringElScriptEngineTest {
 
@@ -33,22 +32,20 @@ public class SpringElScriptEngineTest {
         super();
     }
 
-    @Test
-    public void test1() {
-        ScriptEngineManager scriptEngineManager = new ScriptEngineManager();
-        ScriptEngine engine = scriptEngineManager.getEngineByName("spring-el");
-        Assert.assertNotNull(engine);
+    @Before
+    public void init() {
+        ScriptLanguageManager.register(new SpringElScriptProcessor(), SpringElScriptProcessor.getLanguageName());
     }
 
     @Test
     public void test2() {
-        ScriptProcessor processor = ScriptProcessor.create("spring-el");
+        ScriptProcessor processor = ScriptLanguageManager.getScriptProcessor("spring-el");
         Assert.assertNotNull(processor);
     }
 
     @Test
     public void test3() {
-        ScriptProcessor processor = ScriptProcessor.create("spring-el");
+        ScriptProcessor processor = ScriptLanguageManager.getScriptProcessor("spring-el");
         Object result = processor.evaluate("new String('hello world').toUpperCase()", Bindings.create());
         Assert.assertTrue("HELLO WORLD".equals(result));
     }

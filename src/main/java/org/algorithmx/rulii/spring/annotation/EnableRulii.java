@@ -19,7 +19,8 @@
 package org.algorithmx.rulii.spring.annotation;
 
 import org.algorithmx.rulii.spring.RuleRegistrar;
-import org.algorithmx.rulii.spring.RuliiConfiguration;
+import org.algorithmx.rulii.spring.RuliiConfigurer;
+import org.algorithmx.rulii.spring.script.SpringElScriptProcessor;
 import org.springframework.context.annotation.Import;
 import org.springframework.core.annotation.AliasFor;
 
@@ -36,7 +37,7 @@ import java.lang.annotation.Target;
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
-@Import({RuliiConfiguration.class, RuleRegistrar.class})
+@Import({RuliiConfigurer.class, RuleRegistrar.class})
 public @interface EnableRulii {
 
     /**
@@ -54,4 +55,8 @@ public @interface EnableRulii {
      */
     @AliasFor("value")
     String[] basePackages() default {};
+
+    String scriptLanguage() default SpringElScriptProcessor.LANGUAGE_NAME;
+
+    String[] messageSources() default {};
 }

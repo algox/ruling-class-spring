@@ -43,7 +43,6 @@ public class SpringElScriptEngine implements ScriptEngine {
 
     private static final Map<String, Expression> EXPRESSION_CACHE = new ConcurrentHashMap<>();
 
-    private final ScriptEngineFactory factory = new SpringElScriptEngineFactory();
     private final ExpressionParser parser;
 
     private ScriptContext context = new SimpleScriptContext();
@@ -153,7 +152,7 @@ public class SpringElScriptEngine implements ScriptEngine {
 
     @Override
     public ScriptEngineFactory getFactory() {
-        return factory;
+        return null;
     }
 
     private String readScript(Reader reader) throws ScriptException {

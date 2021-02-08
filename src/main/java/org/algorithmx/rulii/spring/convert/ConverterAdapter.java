@@ -33,7 +33,7 @@ import java.lang.reflect.Type;
 public class ConverterAdapter implements Converter<Object, Object> {
 
     @Autowired(required = false)
-    private ConversionService conversionService;
+    private ConversionService conversionService = DefaultConversionService.getSharedInstance();
 
     public ConverterAdapter() {
         super();

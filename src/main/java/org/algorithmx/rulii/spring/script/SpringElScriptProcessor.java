@@ -45,6 +45,8 @@ import java.lang.reflect.Method;
 
 public class SpringElScriptProcessor implements ScriptProcessor {
 
+    public static final String LANGUAGE_NAME = "spring-el";
+
     private final SpringElScriptEngine engine;
     private StandardEvaluationContext context = new StandardEvaluationContext();
 
@@ -56,6 +58,10 @@ public class SpringElScriptProcessor implements ScriptProcessor {
         super();
         Assert.notNull(engine, "engine cannot be null.");
         this.engine = engine;
+    }
+
+    public final static String getLanguageName() {
+        return LANGUAGE_NAME;
     }
 
     @Override

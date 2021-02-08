@@ -26,8 +26,8 @@ package org.algorithmx.rulii.spring;
  */
 public final class BeanNames {
 
+    public static final String META_INFO_NAME           = "rulii.metaInfo";
     public static final String OBJECT_FACTORY_NAME      = "rulii.objectFactory";
-    public static final String SCRIPT_ENGINE_NAME       = "rulii.scriptEngine";
     public static final String SCRIPT_PROCESSOR_NAME    = "rulii.scriptProcessor";
     public static final String GENERIC_CONVERTER        = "rulii.genericConverter";
     public static final String CONVERTER_REGISTRY       = "rulii.converters";

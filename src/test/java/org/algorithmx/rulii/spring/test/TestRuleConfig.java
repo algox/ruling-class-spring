@@ -24,14 +24,13 @@ import org.algorithmx.rulii.core.ruleset.RuleSetBuilder;
 import org.algorithmx.rulii.spring.annotation.EnableRulii;
 import org.algorithmx.rulii.spring.test.rules.setb.TestRule11;
 import org.algorithmx.rulii.spring.test.rules.setb.TestRule12;
-import org.algorithmx.rulii.util.SystemDefaultsHolder;
-import org.algorithmx.rulii.util.reflect.ObjectFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 
 @Configuration
-@EnableRulii("org.algorithmx.rulii.spring.test")
+@EnableRulii({"org.algorithmx.rulii.spring.test.rules.seta", "org.algorithmx.rulii.spring.test.rules.setb",
+        "org.algorithmx.rulii.spring.test.rules.setc", "org.algorithmx.rulii.spring.test.rulesets"})
 public class TestRuleConfig {
 
     public TestRuleConfig() {
@@ -40,7 +39,6 @@ public class TestRuleConfig {
 
     @Bean(name = "testRuleSetB")
     public RuleSet createRuleSetB() {
-        ObjectFactory factory = SystemDefaultsHolder.getInstance().getDefaults().createObjectFactory();
         return RuleSetBuilder.with("RuleSetB")
                 .rule(RuleBuilder.build(TestRule11.class))
                 .rule(RuleBuilder.build(TestRule12.class))

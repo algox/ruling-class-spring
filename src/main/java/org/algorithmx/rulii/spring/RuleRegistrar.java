@@ -23,6 +23,9 @@ import org.algorithmx.rulii.annotation.RuleSet;
 import org.algorithmx.rulii.core.rule.RuleBuilder;
 import org.algorithmx.rulii.core.ruleset.RuleSetBuilder;
 import org.algorithmx.rulii.spring.annotation.EnableRulii;
+import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.BeanFactory;
+import org.springframework.beans.factory.BeanFactoryAware;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
@@ -42,11 +45,12 @@ import java.util.Arrays;
  * @author Max Arulananthan
  * @since 1.0
  */
-public class RuleRegistrar implements ImportBeanDefinitionRegistrar {
+public class RuleRegistrar implements ImportBeanDefinitionRegistrar, BeanFactoryAware {
 
     private static final BeanNameGenerator BEAN_NAME_GENERATOR = new AnnotationBeanNameGenerator();
 
     private final IndependentCandidateClassPathScanner scanner = new IndependentCandidateClassPathScanner(false);
+    private BeanFactory beanFactory;
 
     public RuleRegistrar() {
         super();
@@ -56,29 +60,18 @@ public class RuleRegistrar implements ImportBeanDefinitionRegistrar {
 
     @Override
     public void registerBeanDefinitions(AnnotationMetadata importingClassMetadata, BeanDefinitionRegistry registry) {
-        String[] basePackages = getBasePackages(importingClassMetadata);
+        MultiValueMap<String, Object> attributes = importingClassMetadata.getAllAnnotationAttributes(EnableRulii.class.getName());
+        if (attributes == null) return;
+
+        String scriptLanguage = getAttribute(attributes, "scriptLanguage");
+        String[] messageSources = getAttributes(attributes, "messageSources");
+
+        // Register MetaInfo Bean
+        registerMetaInfoBean(scriptLanguage, messageSources, registry);
+
+        String[] basePackages = getAttributes(attributes, "basePackages");
         if (basePackages == null || basePackages.length == 0) return;;
         Arrays.stream(basePackages).forEach((basePackage) -> scanPackage(basePackage, registry));
-    }
-
-    /**
-     * Retrieves all the base packages from the EnableRules annotation.
-     *
-     * @param metadata scanned data.
-     * @return all the applicable base packages.
-     */
-    private String[] getBasePackages(AnnotationMetadata metadata) {
-        MultiValueMap<String, Object> attributes = metadata.getAllAnnotationAttributes(EnableRulii.class.getName());
-
-        if (attributes == null) return null;
-
-        String[] result = null;
-
-        if (attributes.containsKey("basePackages")) {
-            result = (String[]) attributes.getFirst("basePackages");
-        }
-
-        return result;
     }
 
     /**
@@ -129,5 +122,25 @@ public class RuleRegistrar implements ImportBeanDefinitionRegistrar {
         builder.addConstructorArgReference(BeanNames.OBJECT_FACTORY_NAME);
         builder.setFactoryMethod("build");
         registry.registerBeanDefinition(originalBeanName, builder.getBeanDefinition());
+    }
+
+    private void registerMetaInfoBean(String scriptLanguage, String[] messageSources, BeanDefinitionRegistry registry) {
+        BeanDefinitionBuilder builder = BeanDefinitionBuilder.genericBeanDefinition(RuliiMetaInfo.class);
+        builder.addConstructorArgValue(scriptLanguage);
+        builder.addConstructorArgValue(messageSources);
+        registry.registerBeanDefinition(BeanNames.META_INFO_NAME, builder.getBeanDefinition());
+    }
+
+    private String[] getAttributes(MultiValueMap<String, Object> attributes, String name) {
+        return attributes.containsKey(name) ? (String[]) attributes.getFirst(name) : null;
+    }
+
+    private String getAttribute(MultiValueMap<String, Object> attributes, String name) {
+        return attributes.containsKey(name) ? (String) attributes.getFirst(name) : null;
+    }
+
+    @Override
+    public void setBeanFactory(BeanFactory beanFactory) throws BeansException {
+        this.beanFactory = beanFactory;
     }
 }

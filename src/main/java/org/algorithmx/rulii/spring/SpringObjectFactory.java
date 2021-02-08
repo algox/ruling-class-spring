@@ -18,9 +18,10 @@
 
 package org.algorithmx.rulii.spring;
 
-import org.algorithmx.rulii.util.reflect.ObjectFactory;
-import org.springframework.beans.factory.BeanFactory;
+import org.algorithmx.rulii.core.UnrulyException;
+import org.algorithmx.rulii.util.reflect.DefaultObjectFactory;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
+import org.springframework.util.Assert;
 
 import java.lang.ref.WeakReference;
 
@@ -30,20 +31,20 @@ import java.lang.ref.WeakReference;
  * @author Max Arulananthan
  * @since 1.0
  */
-public class SpringObjectFactory implements ObjectFactory {
+public class SpringObjectFactory extends DefaultObjectFactory {
 
     // Underlying Spring Factory that does the real work.
     private WeakReference<AutowireCapableBeanFactory> ref;
 
-    public SpringObjectFactory(BeanFactory beanFactory) {
+    public SpringObjectFactory(AutowireCapableBeanFactory beanFactory) {
         super();
-        if (!(beanFactory instanceof AutowireCapableBeanFactory)) throw new IllegalStateException("BeanFactory not AutowireCapableBeanFactory");
+        Assert.notNull(beanFactory, "beanFactory cannot be null.");
         this.ref = new WeakReference(beanFactory);
     }
 
     @Override
-    public <T> T create(Class<T> beanClass) {
-        if (ref.get() == null) throw new IllegalStateException("Looking like the application context was closed");
-        return ref.get().createBean(beanClass);
+    protected <T> T createInternal(Class<T> type) throws UnrulyException {
+        if (ref.get() == null) throw new UnrulyException("Looking like the application context was closed");
+        return ref.get().createBean(type);
     }
 }

@@ -66,7 +66,7 @@ public class RuleRegistrationTest {
         RuleSet testRuleSetC = RuleSetBuilder.with("testRuleSetC")
                             .rule(RuleBuilder.build(TestRule21.class))
                             .build();
-        testRuleSetC.run(RuleContextBuilder.build(Bindings.create()));
+        testRuleSetC.run(RuleContextBuilder.empty());
     }
 
     @Test
