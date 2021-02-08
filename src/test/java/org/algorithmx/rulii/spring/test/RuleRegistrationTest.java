@@ -21,6 +21,8 @@ package org.algorithmx.rulii.spring.test;
 import org.algorithmx.rulii.bind.Bindings;
 import org.algorithmx.rulii.bind.convert.Converter;
 import org.algorithmx.rulii.bind.convert.ConverterRegistry;
+import org.algorithmx.rulii.config.RuliiConfiguration;
+import org.algorithmx.rulii.config.RuliiSystem;
 import org.algorithmx.rulii.core.context.RuleContextBuilder;
 import org.algorithmx.rulii.core.rule.RuleBuilder;
 import org.algorithmx.rulii.core.ruleset.RuleSet;
@@ -43,6 +45,8 @@ public class RuleRegistrationTest {
     private RuleSet testRuleSetA;
     @Autowired
     private RuleSet testRuleSetB;
+    @Autowired
+    private RuliiConfiguration configuration;
 
     public RuleRegistrationTest() {
         super();
@@ -53,6 +57,8 @@ public class RuleRegistrationTest {
         Assert.assertNotNull(converterRegistry);
         Assert.assertNotNull(testRuleSetA);
         Assert.assertNotNull(testRuleSetB);
+        RuliiConfiguration configuration = RuliiSystem.getInstance().getConfiguration();
+        Assert.assertEquals(this.configuration, configuration);
     }
 
     @Test
