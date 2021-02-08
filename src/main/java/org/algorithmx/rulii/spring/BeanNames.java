@@ -31,5 +31,7 @@ public final class BeanNames {
     public static final String SCRIPT_PROCESSOR_NAME    = "rulii.scriptProcessor";
     public static final String GENERIC_CONVERTER        = "rulii.genericConverter";
     public static final String CONVERTER_REGISTRY       = "rulii.converters";
+    public static final String CONFIGURATION            = "rulii.configuration";
+    public static final String SPRING_CONTEXT_LISTENER  = "rulii.contextListener";
 
 }

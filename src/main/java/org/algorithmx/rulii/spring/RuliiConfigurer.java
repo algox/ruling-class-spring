@@ -86,7 +86,7 @@ public class RuliiConfigurer {
         return result != null ? result : new SpringElScriptProcessor();
     }
 
-    @Bean
+    @Bean(name = BeanNames.CONFIGURATION)
     public RuliiConfiguration ruliiConfiguration(RuliiMetaInfo metaInfo, ObjectFactory objectFactory,
                                                  ConverterRegistry converterRegistry, ScriptProcessor scriptProcessor) {
         RuliiConfigurationBuilder builder = RuliiConfigurationBuilder.create();
@@ -101,5 +101,10 @@ public class RuliiConfigurer {
         RuliiSystem.getInstance().setConfiguration(result);
 
         return result;
+    }
+
+    @Bean(name = BeanNames.SPRING_CONTEXT_LISTENER)
+    public SpringContextListener springContextListener() {
+        return new SpringContextListener();
     }
 }
